@@ -8,11 +8,14 @@ const pdfParse = require("pdf-parse");
 const fs = require("fs").promises;
 require("dotenv").config();
 const OpenAI = require("openai");
+const { connect } = require('http2');
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const app = express();
 const PORT = 3001;
+
+app.use(express.json());
 
 app.use(
     cors({
@@ -37,11 +40,13 @@ app.listen(PORT, (error) => {
 
 
 app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
-    console.log(req.file, req.body)
+    // console.log(req.file, req.body)
     // res.status(200).json({ message: "File uploaded successfully!" });
-    
+    console.log("[DEBUG] /uploads route hit");
     if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
+    } else {
+        console.log(req.file.originalname);
     }
 
     // read the file buffer
@@ -53,27 +58,42 @@ app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
     // cleans data
     const clean_text = data.text.replace(/\s/g, '').trim();
     
+    console.log("CV Processed");
+    res.json({ text: data.text });
+    
+});
 
-    const response = await client.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-            { role: "system", content: `
-            You are a senior technical recruiter and career coach.
-            Analyze résumés for clarity, technical strength, and impact.
-            Structure your response with the sections:
-            1. Strengths
-            2. Areas for Improvement
-            3. Suggested Action Plan
-            4. Overall Impression
-            Keep the tone professional and encouraging.
-            `},
-            { role: "user", content: `Analyze this resume:\n\n${data.text}` },
-        ],
-    });
+app.post('/analyse-resume', async (req, res) => {
+    try {
+        const { text } = req.body;
 
-    const feedback = response.choices[0].message.content;
-    console.log(feedback);
-    res.json({ feedback });
+        const response = await client.chat.completions.create({
+            model: "gpt-5-nano",
+            messages: [
+                { role: "system", content: `
+                    You are a senior technical recruiter and career coach.
+                    Analyze résumés for clarity, technical strength, and impact.
+                    Respond ONLY in JSON with this structure
+                    { 'score': number (0-100), 'strengths': [list of strengths], 'improvements': [list of improvements], 'action_plan': [list of action items], 'overall_impression': string }.
+                    Keep the tone professional and encouraging.
+                `},
+                { role: "user", content: `Analyze this resume:\n\n${text}` },
+            ],
+        });
+
+        let raw = response.choices[0].message.content.trim();
+
+        // if (raw.startsWith("```")) {
+        //     raw = raw.replace(/```(json)?/g, "").trim();
+        // }
+
+        const feedback = JSON.parse(raw);
+        console.log("[AI Feedback Parsed]", feedback);
+        res.json(feedback);
+    } catch (err) {
+        console.error("[ERROR in /analyse-resume]", err.message);
+        res.status(500).json({ error: "Failed to parse AI response", details: err.message });
+    }
     
     // console.log(response.output_text); 
 });
