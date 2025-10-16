@@ -6,7 +6,7 @@ import { MessagesSquare, Target, FileChartLine } from "lucide-react";
 export default function Sidebar ({ setCurrentView}) {
     return (
 
-        <nav className="flex flex-col bg-white justify-center items-start p-8 space-y-4 text-gray-900 whitespace-nowrap">
+        <nav className="flex flex-col bg-[#011627] border-r border-[#0D2137] shadow-md justify-center items-start p-2 space-y-4 text-gray-900 whitespace-nowrap">
             <p className="text-gray-600">Tools</p>
             {/* <Link href="/ScoreMyCV" style={{ marginRight: '1rem' }}>
                 Score my cv
@@ -20,25 +20,25 @@ export default function Sidebar ({ setCurrentView}) {
             
             <button
                 onClick={() => setCurrentView("interview")}
-                className="flex items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
+                className="flex text-[#FEFDFF] text-xs font-semibold items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
             >
-                <MessagesSquare className="w-5 h-5" />
+                <MessagesSquare className="w-4 h-4" />
                 Interview Practice 
             </button>
             <button 
                 onClick={() => setCurrentView("target")}
-                className="flex items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
+                className="flex text-[#FEFDFF] text-xs font-semibold items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
 
             >
-                <Target className="w-5 h-5" />
+                <Target className="w-4 h-4" />
                 Target My CV
             </button>
             <button 
                 onClick={() => setCurrentView("resume")}
-                className="flex items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
+                className="flex text-[#FEFDFF] text-xs font-semibold items-center gap-x-2 rounded hover:bg-blue-100 hover:text-blue-600 transition"
 
             >
-                <FileChartLine className="w-5 h-5" />
+                <FileChartLine className="w-4 h-4" />
                 Score My CV
             </button>  
         </nav>

@@ -66,6 +66,36 @@ app.post('/analyse-resume', async (req, res) => {
     
     const { text } = req.body; // const text = req.body.text;
 
+    // --- Contact Info Check ---
+    const emailMatch = /\b\S+@\S+\.\S+\b/;
+    const hasEmail = !!emailMatch // double-bang converts match result to true/false
+    const phoneMatch = /\d{7,}/;
+    const hasPhone = !!phoneMatch;
+    const linkedinMatch = /linkedin\.com/;
+    const hasLinkedIn = !!linkedinMatch;
+    const gitHubMatch = /github\.com/;
+    const hasGitHub = !!gitHubMatch;
+
+    const repeatedWords = [...text.matchAll(/\b(\w+)\s+\1\b/gi)].map(match => match[1]);
+    console.log("Repeated words:", repeatedWords);
+
+    const contains = [];
+    const missing = [];
+
+    if (hasEmail) contains.push(`Email address: ${emailMatch[0]}`);
+    else missing.push("Email address");
+
+    if (hasPhone) contains.push(`Phone number: ${phoneMatch[0]}`);
+    else missing.push("Phone number");
+
+    if (hasLinkedIn) contains.push(`LinkedIn: ${linkedinMatch[0]}`);
+    else missing.push("LinkedIn");
+
+    if (hasGitHub) contains.push(`GitHub: ${gitHubMatch[0]}`);
+    else missing.push("GitHub");
+
+
+
     const response = await client.chat.completions.create({
         model: "gpt-5-nano",
         messages: [
@@ -73,8 +103,21 @@ app.post('/analyse-resume', async (req, res) => {
                 You are a senior technical recruiter and career coach.
                 Analyze résumés for clarity, technical strength, and impact.
                 Respond ONLY in JSON with this structure
-                { 'score': number (0-100), 'strengths': [list of strengths], 'improvements': [list of improvements], 'action_plan': [list of action items], 'overall_impression': string }.
+                { 'score': number (0-100), 'score_summary': string, 'strengths': [list of strengths], 'improvements': [list of improvements], 'action_plan': [list of action items], 'overall_impression': string }.
                 Keep the tone professional and encouraging.
+
+                Your response should:
+                - Start with Given a résumé score from 0–100, write a short motivational paragraph (2–4 sentences)
+                    explaining what the score means and how the person can improve.
+                    Keep it positive and encouraging — like professional feedback from a career coach.
+                    Do not restate the score number, just discuss it naturally.a sentence acknowledging the score and what it generally means.
+                    Explain what the score says about the résumé’s current quality.
+                    Example: Lets say the user scored 52
+                    "This is a decent start, but there's clear room for improvement on your resume. It scored low on some key criteria hiring managers and resume screening software look for, but they can be easily improved. Let's dive into what we checked your resume for, and how you can improve your score by 30+ points."
+                - For strenghts/improvements mention 2-3 strong points each and build upon them if needed.
+                - For the action plan try to keep concise but also maintain importance.
+                - End with a short summary and with a positive call to action, encouraging them to revise and re-upload for a higher score.
+
             `},
             { role: "user", content: `Analyze this resume:\n\n${text}` },
         ],
@@ -87,6 +130,8 @@ app.post('/analyse-resume', async (req, res) => {
     }
     try {
         const feedback = JSON.parse(raw); // transform JSON string into object
+        feedback.contact_issues = missing;
+        feedback.repeatedWords = repeatedWords;
         console.log("[AI Feedback Parsed]", feedback);
         res.json(feedback); // convert back to JSON and send to client, express can only send text over http
     } catch (err) {

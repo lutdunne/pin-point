@@ -7,41 +7,38 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { PDFViewer } from "../components/PDFViewer.js";
 import Sidebar from "../components/Sidebar";
 import InterviewPractice from "../components/InterviewPractice.js";
+import TargetMyCV from "../components/TargetMyCV.js";
 
 export default function Dashboard() {
   	const [feedback, setFeedback] = useState({
     resume: {
 		score: 74,
+		score_summary: [
+			'This is a solid start with clear technical potential.',
+			'Your hands-on projects and range of languages show a strong foundation, but there are formatting, clarity, and impact gaps that hiring managers often notice.', 
+			'By tightening the resume structure, adding quantified outcomes, and showcasing a targeted narrative, you can significantly lift your score with a focused revision.',
+		],
 		strengths: [
-			'Diverse project portfolio spanning desktop, web, and low‑level development',
-			'Strong multi-language proficiency: Java, Python, C, JavaScript, PHP',
-			'Solid foundation in data handling, databases, and full‑stack development',
-			'Experience with collaboration, Git, and Linux in group projects',
-			'Genuine initiative shown through independent projects (e.g., Naive Bayes tool, log analyzer)',
-			'Practical work experience in QA, logistics, and retail demonstrating reliability and adaptability',
-			'Clear exposure to problem solving, algorithms, and fundamental CS concepts through coursework'
+			'Strong project portfolio across multiple languages (Java, Python, C, JavaScript, PHP) demonstrating practical coding and problem-solving ability.',
+			'Diverse hands-on experience in both back-end and front-end development, plus data handling and basic ML concepts.',
+			'Active engagement in education and extra-curricular activities, showing commitment to learning and collaboration.'
 		],
 		improvements: [
-			'Add a concise professional summary and clearly defined target role (e.g., QA Engineer or Full‑Stack Developer)',
-			'Incorporate quantified impact for projects and roles (e.g., tests executed, performance gains, user metrics)',
-			'Detail testing experience: methodologies (functional, regression), tools (e.g., Selenium, JUnit), and any automation work',
-			'Provide a dedicated Technical Skills section with proficiency levels and organized categories (Languages, Frameworks, Databases, Tools)',
-			'Standardize formatting for ATS readability: consistent dates, uniform bullet style, avoid line breaks that split words',
-			'Include links to GitHub/portfolio and LinkedIn; consider adding a brief portfolio URL or project dashboards',
-			'Clarify Naive Bayes project: data sources, evaluation metrics, privacy considerations, and real‑world applicability',
-			'Consider removing or condensing unrelated roles (Store Assistant, Postal Operative) or reframing them to emphasize transferable skills'
+			'Improve formatting and consistency (headings, bullet style, dates) and add a concise professional summary.',
+			'Quantify impact in work experience and projects (e.g., defects found, performance metrics, user counts, time saved).',
+			'Add a portfolio or GitHub URL and ensure project descriptions clearly state outcomes and tech stack.',
+			'Consider tailoring the resume to target roles (e.g., software engineer, QA/test automation) and ensure content is professional and appropriate.'
 		],
 		action_plan: [
-			'Create two targeted resume variants: one for QA Engineer roles and one for Full‑Stack Developer roles',
-			'Add a dedicated Technical Skills section with proficiency ratings (e.g., Java 4/5, Python 4/5, SQL 3/5, HTML/CSS/JS 4/5)',
-			'Revise Projects section to include: project title, role, tech stack, key contributions, and measurable outcomes',
-			'Incorporate links to GitHub/portfolio and any live demos; add a professional summary at the top',
-			'Quantify impact across projects and roles (e.g., test cases designed, automation coverage, performance improvements)',
-			'Reformat resume for consistency (dates, bullet style, spacing) and ensure ATS-friendly layout',
-			'Develop a single-page portfolio or README per project outlining architecture, results, and lessons learned',
-			'Seek feedback from peers or mentors and iterate within two to four weeks'
+			'Create a concise top summary and clean, consistent section headers.',
+			'Add quantified bullets to each role and project where possible.',
+			'Link to portfolio/GitHub; include a clear Skills section detailing languages, tools, and methodologies.',
+			'Standardize dates and formatting; refine project descriptions to emphasize outcomes and relevance to target roles.',
+			'Prepare a targeted version for 2–3 roles and re-upload for re-evaluation.'
 		],
-		overall_impression: 'Lut demonstrates solid CS foundations with a versatile project mix and practical work experience. With a focused target Role, quantified impact, and a polished, ATS-friendly resume structure ( plus a portfolio ), these credentials can be highly competitive for entry‑ to mid‑level software development or QA roles.',
+		overall_impression: 'You have a solid foundation with broad technical breadth and ongoing education. With focused formatting, measurable outcomes, and a portfolio link, your resume will stand out more to recruiters. Revise with these changes and re-upload to pursue a higher score.',
+		contact_issues: ["Github"],
+		repeatedWords: [],
 	},
 	interview: {
 		questions: [
@@ -53,93 +50,153 @@ export default function Dashboard() {
 		],
 	},
     target: null
-  });
+	});
   
-  const [currentView, setCurrentView] = useState("resume");
-  const [fileUrl, setFileUrl] = useState(null);
+	const [currentView, setCurrentView] = useState("resume");
+	const [fileUrl, setFileUrl] = useState(null);
 
+	const hour = new Date().getHours();
+    let greeting = "";
+
+	if (hour < 12) {
+		greeting = "Good morning";
+	} else if (hour < 18) {
+		greeting = "Good afternoon";
+	} else {
+		greeting = "Good evening";
+	}
+
+
+	useEffect(() => {
+	const hardcodedUrl = "/test-cv.pdf"; // path to your test PDF in /public
+	setFileUrl(hardcodedUrl);
+	}, []);
+	
+		useEffect(() => {
+	if (feedback?.resume) {
+		console.log("Contact issues:", feedback.resume.contact_issues);
+	} else {
+		console.log("Feedback resume missing");
+	}
+	}, [feedback]);
  
 
-  useEffect(() => {
-    // const savedUrl = localStorage.getItem("fileUrl");
-    const savedFeedback = localStorage.getItem("feedback");
-    // if (savedUrl) setFileUrl(savedUrl);
-	const hardcodedUrl = "/test-cv.pdf"; // path to your test PDF in /public
-  	setFileUrl(hardcodedUrl);
+	// useEffect(() => {
+	// 	// const savedUrl = localStorage.getItem("fileUrl");
+	// 	const savedFeedback = localStorage.getItem("feedback");
+	// 	// if (savedUrl) setFileUrl(savedUrl);
+		
 
-    if (savedFeedback) {
-		try {
-			const obj = JSON.parse(savedFeedback);
-			setFeedback({...feedback, resume: obj});
-		} catch (e) {
-			console.error("Could not parse saved feedback:", savedFeedback, e);
-			setFeedback({...feedback, resume: null});
-		}
-    }
-  }, []);
+	// 	if (savedFeedback) {
+	// 		try {
+	// 			const obj = JSON.parse(savedFeedback);
+	// 			if (obj.resume) {
+	// 			setFeedback(obj); // means localStorage already has the right structure
+	// 			} else {
+	// 			setFeedback({ ...feedback, resume: obj });
+	// 			}
+	// 		} catch (e) {
+	// 			console.error("Could not parse saved feedback:", savedFeedback, e);
+	// 		}
+	// 	}
+	// }, []);	
 
   return (
-    <main className="flex h-screen bg-gray-100 text-gray-900 overflow-hidden">
+    <main className="flex h-screen bg-gray-100 text-gray-900 overflow-hidden items-stretch">
       	<Sidebar setCurrentView={setCurrentView} />
         {currentView === "resume" && feedback && (
-        <div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6">
-        	<h1 className="text-2xl font-bold mb-8 text-grey-600 ">Good morning,</h1>
-            <p>Welcome to your resume review.</p>
-            <div className="mt-6 bg-white shadow-md rounded p-6 w-full text-gray-800 overflow-y-auto max-h prose prose-blue">
-            	<h2 className="text-2xl font-semibold mb-4 text-blue-600">Résumé Analysis</h2>
+			<div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6 overflow-y-auto">
+				<h1 className="text-2xl font-bold mb-8 text-grey-600 ">{greeting}.</h1>
+				<p>Welcome to your resume review.</p>
+				<div className="mt-6 bg-white shadow-md rounded-xl p-6  w-full text-gray-800 max-h prose prose-blue"> {/*card*/}
+					{/* <h2 className="text-2xl font-semibold mb-4 text-blue-600">Résumé Analysis</h2> */}
 
-				{"score" in feedback && (
-					<p className="text-xl font-bold mb-4">Your resume scored {feedback.resume?.score} out of 100.</p>
-				)}
+					{"score" in feedback.resume && (
+						<p className="text-md font-semibold mb-2">Your resume scored {feedback.resume?.score} out of 100.</p>
+					)}
+					{feedback.resume?.overall_impression && (
+						<>
+							<h3 className="mt-4 text-lg font-semibold text-gray-800">Overall Impression</h3>
+							<p className="mt-1">{feedback.resume.overall_impression}</p>
+						</>
+					)}
+				</div>
+				<div className="mt-6 bg-white shadow-md rounded-xl p-6 mb-14 w-full text-gray-800 max-h prose prose-blue"> {/*card*/}	
+					{Array.isArray(feedback.resume?.strengths) && feedback.resume?.strengths.length > 0 && (
+						<>
+							<h3 className="mt-4 text-lg font-semibold text-green-700">Strengths</h3>
+							<ul className="list-disc pl-5 space-y-1">
+								{feedback.resume.strengths.map((s, i) => <li key={i}>{s}</li>)}
+							</ul>
+						</>
+					)}
 
-				{Array.isArray(feedback.resume?.strengths) && feedback.resume?.strengths.length > 0 && (
-					<>
-					<h3 className="mt-4 text-lg font-semibold text-green-700">Strengths</h3>
-					<ul className="list-disc pl-5 space-y-1">
-						{feedback.resume.strengths.map((s, i) => <li key={i}>{s}</li>)}
-					</ul>
-					</>
-				)}
+					{Array.isArray(feedback.resume?.improvements) && feedback.resume?.improvements.length > 0 && (
+						<>
+							<h3 className="mt-4 text-lg font-semibold text-yellow-700">Improvements</h3>
+							<ul className="list-disc pl-5 space-y-1">
+								{feedback.resume.improvements.map((w, i) => <li key={i}>{w}</li>)}
+							</ul>
+						</>
+					)}
 
-				{Array.isArray(feedback.resume?.improvements) && feedback.resume?.improvements.length > 0 && (
-					<>
-					<h3 className="mt-4 text-lg font-semibold text-yellow-700">Improvements</h3>
-					<ul className="list-disc pl-5 space-y-1">
-						{feedback.resume.improvements.map((w, i) => <li key={i}>{w}</li>)}
-					</ul>
-					</>
-				)}
+					{Array.isArray(feedback.resume?.action_plan) && feedback.resume?.action_plan.length > 0 && (
+						<>
+							<h3 className="mt-4 text-lg font-semibold text-blue-700">Action Plan</h3>
+							<ul className="list-disc pl-5 space-y-1">
+								{feedback.resume.action_plan.map((a, i) => <li key={i}>{a}</li>)}
+							</ul>
+						</>
+					)}
 
-				{Array.isArray(feedback.resume?.action_plan) && feedback.resume?.action_plan.length > 0 && (
-					<>``
-					<h3 className="mt-4 text-lg font-semibold text-blue-700">Action Plan</h3>
-					<ul className="list-disc pl-5 space-y-1">
-						{feedback.resume.action_plan.map((a, i) => <li key={i}>{a}</li>)}
-					</ul>
-					</>
-				)}
-
-				{feedback.resume?.overall_impression && (
-					<>
-					<h3 className="mt-4 text-lg font-semibold text-gray-800">Overall Impression</h3>
-					<p className="mt-1">{feedback.resume.overall_impression}</p>
-					</>
-				)}
-            </div>
-        </div>
+					{feedback.resume?.overall_impression && (
+						<>
+							<h3 className="mt-4 text-lg font-semibold text-gray-800">Overall Impression</h3>
+							<p className="mt-1">{feedback.resume.overall_impression}</p>
+						</>
+					)}
+					{Array.isArray(feedback.resume?.contact_issues) && feedback.resume.contact_issues.length > 0 && (
+						<>
+							<h3 className="text-lg font-semibold text-red-700">Missing Contact Info</h3>
+							<ul className="list-disc pl-5">
+								{feedback.resume.contact_issues.map((item, i) => <li key={i}>{item}</li>)}
+							</ul>
+						</>
+					)}
+					{Array.isArray(feedback.resume?.repeatedWords) && (
+						<>
+							<h3 className="text-lg font-semibold text-red-700">Repeated Words</h3>
+							{!feedback.resume.repeatedWords || feedback.resume.repeatedWords.length === 0 ? (
+								<p>No repeated words found</p>
+							) : (
+								<>
+									<p>
+										Number of repeated words: {feedback.resume.repeatedWords.length}
+									</p>
+									<ul className="list-disc pl-5">
+										{feedback.resume.repeatedWords.map((item, i) => (
+											<li key={i}>{item}</li>
+										))}
+									</ul>
+								</>
+							)}
+						</>
+					)}
+				</div>
+			</div>
         )}
         {currentView === "interview" && (
 			<InterviewPractice 
 				feedback={feedback.interview} 
 				setFeedback={(updated) => 
-				setFeedback((prev) => ({ ...prev, interview: updated }))
+					setFeedback((prev) => ({ ...prev, interview: updated }))
 				} 
 			/>
 		)}
         {currentView === "target" && (
-          <h1>Target CV Analysis</h1>
+			<TargetMyCV />
         )}
-          
+        
       	<div className="flex bg-white w-1/2 p-6 h-full">
 			{fileUrl ? (
 				<PDFViewer fileUrl={fileUrl} />

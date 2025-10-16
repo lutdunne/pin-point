@@ -7,9 +7,9 @@ export default function MainLayout({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col flex-1 relative">
+    <div className="relative h-screen overflow-hidden">
       <Header setIsModalOpen={setIsModalOpen} />  {/* Pass control down */}
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <main className="flex overflow-hidden h-screen">{children}</main>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
