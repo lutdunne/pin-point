@@ -6,7 +6,9 @@ export default function Header() {
             <h1 className="text-lg font-bold">CV Analyzer</h1>
             <nav>
                 <Link href="/Dashboard" className="mr-4">Home</Link>
-                <Link href="/about">About</Link>
+                <button>
+                    Re-score Resume
+                </button>
             </nav>
         </header>
     );

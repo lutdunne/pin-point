@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const cors = require('cors');
 const multer  = require('multer')
@@ -38,7 +36,7 @@ app.listen(PORT, (error) => {
     }
 );
 
-
+// Upload endpoint for receiving PDF files
 app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
     // console.log(req.file, req.body)
     // res.status(200).json({ message: "File uploaded successfully!" });
@@ -63,7 +61,44 @@ app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
     
 });
 
+// Analyse résumé text with OpenAI
 app.post('/analyse-resume', async (req, res) => {
+    
+    const { text } = req.body; // const text = req.body.text;
+
+    const response = await client.chat.completions.create({
+        model: "gpt-5-nano",
+        messages: [
+            { role: "system", content: `
+                You are a senior technical recruiter and career coach.
+                Analyze résumés for clarity, technical strength, and impact.
+                Respond ONLY in JSON with this structure
+                { 'score': number (0-100), 'strengths': [list of strengths], 'improvements': [list of improvements], 'action_plan': [list of action items], 'overall_impression': string }.
+                Keep the tone professional and encouraging.
+            `},
+            { role: "user", content: `Analyze this resume:\n\n${text}` },
+        ],
+    });
+
+    let raw = response.choices[0].message.content.trim(); 
+
+    if (raw.startsWith("```")) {
+        raw = raw.replace(/```(json)?/g, "").trim();
+    }
+    try {
+        const feedback = JSON.parse(raw); // transform JSON string into object
+        console.log("[AI Feedback Parsed]", feedback);
+        res.json(feedback); // convert back to JSON and send to client, express can only send text over http
+    } catch (err) {
+        console.error("[PARSE ERROR]", raw, err);
+        res.status(500).json({ error: "Invalid JSON from AI", raw });
+    }
+
+    // console.log(response.output_text);
+});
+
+// Interview practice - generate interview questions from résumé text
+app.post('/interview-practice', async (req, res) => {
     try {
         const { text } = req.body;
 
@@ -72,20 +107,21 @@ app.post('/analyse-resume', async (req, res) => {
             messages: [
                 { role: "system", content: `
                     You are a senior technical recruiter and career coach.
-                    Analyze résumés for clarity, technical strength, and impact.
+                    Your only task is to generate 5 common interview questions based on the following résumé.
+                    Base the questions on the candidate's degree (if listed), experience, and skills.
                     Respond ONLY in JSON with this structure
-                    { 'score': number (0-100), 'strengths': [list of strengths], 'improvements': [list of improvements], 'action_plan': [list of action items], 'overall_impression': string }.
+                    { 'questions': [list of questions] }.
                     Keep the tone professional and encouraging.
                 `},
-                { role: "user", content: `Analyze this resume:\n\n${text}` },
+                { role: "user", content: `Generate interview questions for the following résumé:\n\n${text}` },
             ],
         });
 
         let raw = response.choices[0].message.content.trim();
 
-        // if (raw.startsWith("```")) {
-        //     raw = raw.replace(/```(json)?/g, "").trim();
-        // }
+        if (raw.startsWith("```")) {
+            raw = raw.replace(/```(json)?/g, "").trim();
+        }
 
         const feedback = JSON.parse(raw);
         console.log("[AI Feedback Parsed]", feedback);
