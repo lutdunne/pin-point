@@ -8,6 +8,8 @@ import { PDFViewer } from "../components/PDFViewer.js";
 import Sidebar from "../components/Sidebar";
 import InterviewPractice from "../components/InterviewPractice.js";
 import TargetMyCV from "../components/TargetMyCV.js";
+import { useView } from "../components/ViewContext.js";
+
 
 export default function Dashboard() {
   	const [feedback, setFeedback] = useState({
@@ -52,8 +54,9 @@ export default function Dashboard() {
 		target: null
 	});
   
-	const [currentView, setCurrentView] = useState("resume");
 	const [fileUrl, setFileUrl] = useState(null);
+	const { currentView } = useView();
+
 
 	const hour = new Date().getHours();
     let greeting = "";
@@ -102,15 +105,12 @@ export default function Dashboard() {
 	// }, []);	
 
   return (
-    <main className="flex h-screen w-full bg-gray-100 text-gray-900 overflow-hidden items-stretch">
-		
-			<Sidebar setCurrentView={setCurrentView} />
-		
+    <main className="flex h-screen w-full bg-white overflow-hidden items-stretch">
         {currentView === "resume" && feedback && (
-			<div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6 overflow-y-auto">
-				<h1 className="text-2xl font-bold mb-8 text-grey-600 ">{greeting}.</h1>
+			<div className="flex flex-col justify-start items-start w-full p-6 border-r space-y-6 overflow-y-auto">
+				<h1 className="text-2xl font-bold mb-8 ">{greeting}.</h1>
 				<p>Welcome to your resume review.</p>
-				<div className="mt-6 bg-white shadow-md rounded-xl p-6  w-full text-gray-800 max-h prose prose-blue"> {/*card*/}
+				<div className="mt-6 bg-white shadow-md rounded-xl p-6  w-full max-h prose prose-blue"> {/*card*/}
 					{/* <h2 className="text-2xl font-semibold mb-4 text-blue-600">Résumé Analysis</h2> */}
 
 					{"score" in feedback.resume && (
@@ -204,7 +204,7 @@ export default function Dashboard() {
 			/>
         )}
         
-      	<div className="flex bg-white w-1/2 p-6 h-full">
+      	{/* <div className="flex bg-white w-1/2 p-6 h-full">
 			{fileUrl ? (
 				<PDFViewer fileUrl={fileUrl} />
 			) : (
@@ -212,7 +212,7 @@ export default function Dashboard() {
 				<p>No résumé uploaded yet.</p>
 			</div>
 			)}
-		</div>
+		</div> */}
     </main>
   );
 }
