@@ -16,7 +16,7 @@ export default function TargetMyCV() {
     const handleJobText = async (e) => {}
 
     return (
-        <div className="flex flex-col w-1/2 p-6 border-r space-y-6 overflow-y-auto">
+        <div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6 overflow-y-auto">
             <div className="flex flex-col">
                 <h1 className="text-2xl font-bold mb-3 text-grey-600">Target My CV</h1>
                 <p>Paste a job description below to analyze how well your résumé matches.</p>

@@ -102,8 +102,10 @@ export default function Dashboard() {
 	// }, []);	
 
   return (
-    <main className="flex h-screen bg-gray-100 text-gray-900 overflow-hidden items-stretch">
-      	<Sidebar setCurrentView={setCurrentView} />
+    <main className="flex h-screen w-full bg-gray-100 text-gray-900 overflow-hidden items-stretch">
+		
+			<Sidebar setCurrentView={setCurrentView} />
+		
         {currentView === "resume" && feedback && (
 			<div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6 overflow-y-auto">
 				<h1 className="text-2xl font-bold mb-8 text-grey-600 ">{greeting}.</h1>
