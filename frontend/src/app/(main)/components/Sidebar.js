@@ -6,7 +6,7 @@ import { MessagesSquare, Target, FileChartLine } from "lucide-react";
 export default function Sidebar ({ setCurrentView}) {
     return (
 
-        <nav className="flex flex-col bg-[#011627] border-r border-[#0D2137] shadow-md justify-center items-start p-2 space-y-4 text-gray-900 whitespace-nowrap">
+        <nav className="flex flex-col bg-[#011627] border-r border-t border-[#0D2137] shadow-md justify-center items-start p-2 space-y-4 text-gray-900 whitespace-nowrap">
             <p className="text-gray-600">Tools</p>
             {/* <Link href="/ScoreMyCV" style={{ marginRight: '1rem' }}>
                 Score my cv
