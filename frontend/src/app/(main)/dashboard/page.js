@@ -11,45 +11,45 @@ import TargetMyCV from "../components/TargetMyCV.js";
 
 export default function Dashboard() {
   	const [feedback, setFeedback] = useState({
-    resume: {
-		score: 74,
-		score_summary: [
-			'This is a solid start with clear technical potential.',
-			'Your hands-on projects and range of languages show a strong foundation, but there are formatting, clarity, and impact gaps that hiring managers often notice.', 
-			'By tightening the resume structure, adding quantified outcomes, and showcasing a targeted narrative, you can significantly lift your score with a focused revision.',
-		],
-		strengths: [
-			'Strong project portfolio across multiple languages (Java, Python, C, JavaScript, PHP) demonstrating practical coding and problem-solving ability.',
-			'Diverse hands-on experience in both back-end and front-end development, plus data handling and basic ML concepts.',
-			'Active engagement in education and extra-curricular activities, showing commitment to learning and collaboration.'
-		],
-		improvements: [
-			'Improve formatting and consistency (headings, bullet style, dates) and add a concise professional summary.',
-			'Quantify impact in work experience and projects (e.g., defects found, performance metrics, user counts, time saved).',
-			'Add a portfolio or GitHub URL and ensure project descriptions clearly state outcomes and tech stack.',
-			'Consider tailoring the resume to target roles (e.g., software engineer, QA/test automation) and ensure content is professional and appropriate.'
-		],
-		action_plan: [
-			'Create a concise top summary and clean, consistent section headers.',
-			'Add quantified bullets to each role and project where possible.',
-			'Link to portfolio/GitHub; include a clear Skills section detailing languages, tools, and methodologies.',
-			'Standardize dates and formatting; refine project descriptions to emphasize outcomes and relevance to target roles.',
-			'Prepare a targeted version for 2–3 roles and re-upload for re-evaluation.'
-		],
-		overall_impression: 'You have a solid foundation with broad technical breadth and ongoing education. With focused formatting, measurable outcomes, and a portfolio link, your resume will stand out more to recruiters. Revise with these changes and re-upload to pursue a higher score.',
-		contact_issues: ["Github"],
-		repeatedWords: [],
-	},
-	interview: {
-		questions: [
-			'Please describe your highest level of education and how your degree has prepared you for this role.',
-			'Walk me through a recent project or experience where you applied your technical skills to deliver a tangible result, including your role and the outcome.',
-			'What technical tools, languages, or methodologies are you most proficient in, and how have you applied them in real-world work?',
-			'Describe a challenging problem you faced in a team setting. What approach did you take, and what was the result?',
-			'What motivates you in your work, and how does this role fit with your short- and long-term career goals?'
-		],
-	},
-    target: null
+		resume: {
+			score: 74,
+			score_summary: [
+				'This is a solid start with clear technical potential.',
+				'Your hands-on projects and range of languages show a strong foundation, but there are formatting, clarity, and impact gaps that hiring managers often notice.', 
+				'By tightening the resume structure, adding quantified outcomes, and showcasing a targeted narrative, you can significantly lift your score with a focused revision.',
+			],
+			strengths: [
+				'Strong project portfolio across multiple languages (Java, Python, C, JavaScript, PHP) demonstrating practical coding and problem-solving ability.',
+				'Diverse hands-on experience in both back-end and front-end development, plus data handling and basic ML concepts.',
+				'Active engagement in education and extra-curricular activities, showing commitment to learning and collaboration.'
+			],
+			improvements: [
+				'Improve formatting and consistency (headings, bullet style, dates) and add a concise professional summary.',
+				'Quantify impact in work experience and projects (e.g., defects found, performance metrics, user counts, time saved).',
+				'Add a portfolio or GitHub URL and ensure project descriptions clearly state outcomes and tech stack.',
+				'Consider tailoring the resume to target roles (e.g., software engineer, QA/test automation) and ensure content is professional and appropriate.'
+			],
+			action_plan: [
+				'Create a concise top summary and clean, consistent section headers.',
+				'Add quantified bullets to each role and project where possible.',
+				'Link to portfolio/GitHub; include a clear Skills section detailing languages, tools, and methodologies.',
+				'Standardize dates and formatting; refine project descriptions to emphasize outcomes and relevance to target roles.',
+				'Prepare a targeted version for 2–3 roles and re-upload for re-evaluation.'
+			],
+			overall_impression: 'You have a solid foundation with broad technical breadth and ongoing education. With focused formatting, measurable outcomes, and a portfolio link, your resume will stand out more to recruiters. Revise with these changes and re-upload to pursue a higher score.',
+			contact_issues: ["Github"],
+			repeatedWords: [],
+		},
+		interview: {
+			questions: [
+				'Please describe your highest level of education and how your degree has prepared you for this role.',
+				'Walk me through a recent project or experience where you applied your technical skills to deliver a tangible result, including your role and the outcome.',
+				'What technical tools, languages, or methodologies are you most proficient in, and how have you applied them in real-world work?',
+				'Describe a challenging problem you faced in a team setting. What approach did you take, and what was the result?',
+				'What motivates you in your work, and how does this role fit with your short- and long-term career goals?'
+			],
+		},
+		target: null
 	});
   
 	const [currentView, setCurrentView] = useState("resume");
@@ -196,7 +196,12 @@ export default function Dashboard() {
 			/>
 		)}
         {currentView === "target" && (
-			<TargetMyCV />
+			<TargetMyCV 
+				feedback={feedback.target} 
+				setFeedback={(updated) => 
+					setFeedback((prev) => ({ ...prev, target: updated }))
+				}
+			/>
         )}
         
       	<div className="flex bg-white w-1/2 p-6 h-full">

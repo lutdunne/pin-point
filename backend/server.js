@@ -29,12 +29,12 @@ app.get('/', (req, res) => {
 
 
 app.listen(PORT, (error) => {
-    if (!error)
+    if (!error) {
         console.log("Server is Successfully Running, and App is listening on port " + PORT);
-    else
+    } else {
         console.log("Error occurred, server can't start", error);
-    }
-);
+        }
+});
 
 // Upload endpoint for receiving PDF files
 app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
@@ -60,6 +60,8 @@ app.post('/uploads', upload.single('uploaded_file'), async (req, res) => {
     res.json({ text: data.text });
     
 });
+
+
 
 // Analyse résumé text with OpenAI
 app.post('/analyse-resume', async (req, res) => {
@@ -177,4 +179,55 @@ app.post('/interview-practice', async (req, res) => {
     }
     
     // console.log(response.output_text); 
+});
+
+app.post('/target', async (req, res) => {
+    try {
+        const { resumeText, jobDesc } = req.body;
+        console.log("[DEBUG] Received resumeText length:", resumeText?.length);
+        console.log("[DEBUG] Received jobDesc length:", jobDesc?.length);
+
+        const response = await client.chat.completions.create({
+            model: "gpt-5-nano",
+            messages: [
+                { role: "system", content: `
+                    You are a senior technical recruiter and career coach.
+                    Compare résumés to job descriptions and evaluate how well they align.
+                    Respond ONLY in JSON with this structure
+                    { 
+                        'match': number (0-100), 
+                        'missing_skills': [list of missing skills], 
+                        'suggestions': string 
+                    }.
+                    Keep the tone professional and encouraging.
+                `},
+                { role: "user", content: `
+                    Compare the following résumé with this job description.
+                    Return the JSON structure described above.
+
+                    Résumé:
+                    ${resumeText}
+
+                    Job Description:
+                    ${jobDesc}` 
+                },
+            ],
+        });
+
+        let raw = response.choices[0].message.content.trim();
+
+        if (raw.startsWith("```")) {
+            raw = raw.replace(/```(json)?/g, "").trim();
+        }
+
+        const feedback = JSON.parse(raw);
+        console.log("[AI Feedback Parsed]", feedback);
+        res.json({
+            feedback,
+            text: req.body.text,  // explicitly return the text you received
+        });
+    } catch (err) {
+        console.error("[ERROR in /analyse-resume]", err.message);
+        res.status(500).json({ error: "Failed to parse AI response", details: err.message });
+    }
 });
