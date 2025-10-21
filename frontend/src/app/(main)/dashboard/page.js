@@ -110,7 +110,7 @@ export default function Dashboard() {
 			<div className="flex flex-col justify-start items-start w-full p-6 border-r space-y-6 overflow-y-auto">
 				<h1 className="text-2xl font-bold mb-8 ">{greeting}.</h1>
 				<p>Welcome to your resume review.</p>
-				<div className="mt-6 bg-white shadow-md rounded-xl p-6  w-full max-h prose prose-blue"> {/*card*/}
+				<div className="mt-6 bg-[#f6f6f7] shadow-md rounded-xl p-6  w-full max-h prose prose-blue"> {/*card*/}
 					{/* <h2 className="text-2xl font-semibold mb-4 text-blue-600">Résumé Analysis</h2> */}
 
 					{"score" in feedback.resume && (
@@ -123,7 +123,7 @@ export default function Dashboard() {
 						</>
 					)}
 				</div>
-				<div className="mt-6 bg-white shadow-md rounded-xl p-6 mb-14 w-full text-gray-800 max-h prose prose-blue"> {/*card*/}	
+				<div className="mt-6 bg-[#f6f6f7] shadow-md rounded-xl p-6 mb-14 w-full text-gray-800 max-h prose prose-blue"> {/*card*/}	
 					{Array.isArray(feedback.resume?.strengths) && feedback.resume?.strengths.length > 0 && (
 						<>
 							<h3 className="mt-4 text-lg font-semibold text-green-700">Strengths</h3>
@@ -204,7 +204,7 @@ export default function Dashboard() {
 			/>
         )}
 		{currentView === "pdf" && (
-			<div className="flex bg-white w-full p-6 h-full">
+			<div className="flex bg-[#f6f6f7] w-full p-6 h-full">
 				{fileUrl ? (
 					<PDFViewer fileUrl={fileUrl} />
 				) : (

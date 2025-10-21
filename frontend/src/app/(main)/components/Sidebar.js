@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { useView } from "./ViewContext";
-import { MessagesSquare, Target, FileChartLine, Pin } from "lucide-react";
+import { useFeedback } from "./FeedbackContext";
+import { MessagesSquare, Target, FileChartLine, Pin, Circle } from "lucide-react";
+
 
 
 export default function Sidebar () {
     const { currentView, setCurrentView } = useView();
+    const { feedback } = useFeedback();
 
+    console.log("Sidebar feedback:", feedback);
     return (
 
         <nav className="flex flex-col w-73 bg-[#f6f6f7] border-[#0D2137] shadow-md p-4 space-y-4 whitespace-nowrap">
@@ -18,8 +22,16 @@ export default function Sidebar () {
                 <h1 className="text-lg font-bold">PinPoint</h1>
             </div>
             <div className="w-45 border-b border-[#e2e2e3] mb-6 mx-auto" />
-            {/* Tools section */}
+
+
+
+            
             <div className="flex flex-col pl-15 justify-center items-start space-y-3">
+                {/* Tools section */}
+                {feedback?.resume?.score && (
+                    <p className="text-md font-semibold mb-2">{feedback.resume?.score}</p>
+                )}
+                <Circle strokeWidth={0.5} className="w-50 h-50"/>
                 <p className="text-black font-semibold hover:text-[#e67b77] transition">Tools</p>
                 <button
                     onClick={() => setCurrentView("interview")}

@@ -10,10 +10,10 @@ export default function FileUpload({ onFileChange }) {
             onChange={(e) => onFileChange(e.target.files[0])}
         />
     <div
-        className="relative z-40 cursor-pointer group-hover:translate-x-8 group-hover:shadow-2xl group-hover:-translate-y-8 transition-all duration-500 bg-neutral-900 flex items-center justify-center h-32 w-32 mx-auto rounded-xl"
+        className="relative z-40 cursor-pointer group-hover:translate-x-8 group-hover:shadow-2xl group-hover:-translate-y-8 transition-all duration-500 bg-[#3c3c43] flex items-center justify-center h-32 w-32 mx-auto rounded-xl"
     >
         <svg
-            className="h-6 w-6 text-white/60"
+            className="h-6 w-6 text-white"
             strokeLinejoin="round"
             strokeLinecap="round"
             strokeWidth="2"
@@ -30,7 +30,7 @@ export default function FileUpload({ onFileChange }) {
         </svg>
     </div>
     <div
-        className="absolute border opacity-0 group-hover:opacity-80 transition-all duration-300 border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 w-32 mx-auto rounded-xl"
+        className="absolute border opacity-0 group-hover:opacity-80 transition-all duration-300 border-dashed border-[#e67b77] inset-0 z-30 bg-transparent flex items-center justify-center h-32 w-32 mx-auto rounded-xl"
     ></div>
     </div>
     );
