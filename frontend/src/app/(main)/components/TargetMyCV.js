@@ -57,12 +57,11 @@ export default function TargetMyCV({feedback, setFeedback}) {
         }
     }
     return (
-        <div className="flex flex-col justify-start items-start w-1/2 p-6 border-r space-y-6 overflow-y-auto">
-            <div className="flex flex-col">
-                <h1 className="text-2xl font-bold mb-3 text-grey-600">Target My CV</h1>
-                <p>Paste a job description below to analyze how well your résumé matches.</p>
+        <div className="flex flex-col justify-start items-start w-full p-6 border-r space-y-6 overflow-y-auto">
+            <div className='flex flex-col'>
+                <h1 className="text-2xl font-bold mb-3 text-grey-600 ">Good morning.</h1>
+                <p>Welcome to your Target my Cv</p>
             </div>
-
             <div className="mt-6 bg-white shadow-md rounded-xl p-6 w-full text-gray-800 overflow-y-auto max-h prose prose-blue">
                 <form onSubmit={handleJobText} className="space-y-4 ">
                     <label className="block text-gray-700">Paste the job description:</label>

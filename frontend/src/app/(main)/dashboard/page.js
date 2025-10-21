@@ -71,8 +71,8 @@ export default function Dashboard() {
 
 
 	useEffect(() => {
-	const hardcodedUrl = "/test-cv.pdf"; // path to your test PDF in /public
-	setFileUrl(hardcodedUrl);
+		const hardcodedUrl = "/test-cv.pdf"; // path to your test PDF in /public
+		setFileUrl(hardcodedUrl);
 	}, []);
 	
 		useEffect(() => {
@@ -203,6 +203,17 @@ export default function Dashboard() {
 				}
 			/>
         )}
+		{currentView === "pdf" && (
+			<div className="flex bg-white w-full p-6 h-full">
+				{fileUrl ? (
+					<PDFViewer fileUrl={fileUrl} />
+				) : (
+				<div className="flex items-center justify-center h-full text-gray-500">
+					<p>No résumé uploaded yet.</p>
+				</div>
+				)}
+			</div> 
+		)}
         
       	{/* <div className="flex bg-white w-1/2 p-6 h-full">
 			{fileUrl ? (

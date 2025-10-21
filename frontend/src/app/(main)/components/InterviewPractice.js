@@ -56,7 +56,7 @@ export default function InterviewPractice({ feedback, setFeedback }) {
         }
     };
     return (
-        <div className="flex flex-col w-1/2 p-6 border-r space-y-6">
+        <div className="flex flex-col w-full p-6 border-r space-y-6">
             <div className='flex flex-col'>
                 <h1 className="text-2xl font-bold mb-3 text-grey-600 ">Good morning.</h1>
                 <p>Welcome to your interview practice.</p>

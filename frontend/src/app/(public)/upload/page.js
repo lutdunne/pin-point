@@ -4,15 +4,27 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FileUpload from "../../(main)/components/FileUpload";
+import LoadingPage from "../../(main)/components/LoadingPage";
+
 
 export default function Upload() {
     const [file, setFile] = useState(null);
     const [feedback, setFeedback] = useState("");
-    const [parsedText, setParsedText] = useState("");
     const [loading, setLoading] = useState(false); 
     const [fileUrl, setFileUrl] = useState(null);
+
     
     const router = useRouter();
+
+    async function handleUploadAndAnalyse(e) {
+        e.preventDefault();
+        setLoading(true);
+
+        const text = await handleUploadFile(e);  // first upload
+        if (!text) return;
+        await handleAnalyse(text);// then analyze
+        router.push("/dashboard");
+    }
 
     // Upload + parse resume
     const handleUploadFile = async (e) => {
@@ -38,11 +50,13 @@ export default function Upload() {
             
             const data = await response.json(); // { text: "extracted text..." }
             console.log("Uploaded", data);
-            setParsedText(data.text); // store extracted text for analysis
+
             if (fileUrl) {
                 URL.revokeObjectURL(fileUrl);
             }
             setFileUrl(URL.createObjectURL(file));
+            
+            return data.text // store extracted text for analysis
         } catch (err) {
             console.error("Upload failed:", err);
         } finally {
@@ -51,8 +65,8 @@ export default function Upload() {
     };
 
 
-    const handleAnalyse = async (e) => {
-        if (!parsedText) {
+    const handleAnalyse = async (text) => {
+        if (!text) {
             console.log("No parsed text to analyze yet");
             return;
         }
@@ -64,7 +78,7 @@ export default function Upload() {
             const response = await fetch("http://localhost:3001/analyse-resume", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: parsedText }),
+                body: JSON.stringify({ text: text }),
             });
 
             if (!response.ok) {
@@ -91,8 +105,6 @@ export default function Upload() {
             localStorage.setItem("fileUrl", objectUrl);
             localStorage.setItem("parsedText", data.text);
             localStorage.setItem("feedback", JSON.stringify(data));
-            
-            router.push("/dashboard");
         } catch (err) {
             console.error("Analysis failed:", err);
         } finally {
@@ -101,48 +113,30 @@ export default function Upload() {
     };
     return (
         <div>
-            <form
-                onSubmit={handleUploadFile} 
-                encType="multipart/form-data" 
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96"
-            >
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Upload your résumé (PDF):
-                </label>
-
-                <FileUpload onFileChange={setFile} />
-                
-                {file && (
-                <p className="text-sm text-gray-600 mt-2">
-                    Selected file: <span className="font-semibold">{file.name}</span>
-                </p>
-                )}
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full mt-4"
-                >
-                {loading ? "Uploading..." : "Upload & Parse"}
-                </button>
-            </form>
-            {/* Parsed résumé confirmation */}
-            {parsedText && (
-            <p className="text-sm text-gray-700 mb-4">
-                File parsed successfully. Ready for analysis.
-            </p>
+            {loading ? (
+                <LoadingPage />
+            ) : (
+                <form
+                    encType="multipart/form-data" 
+                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96"
+                > 
+                    <FileUpload onFileChange={setFile} />
+                    
+                    {file && (
+                    <p className="text-sm text-gray-600 mt-2">
+                        Selected file: <span className="font-semibold">{file.name}</span>
+                    </p>
+                    )}
+                    <button
+                        onClick={handleUploadAndAnalyse}
+                        disabled={loading}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
+                    >
+                        {loading ? "Analyzing..." : "Analyze Résumé"}
+                    </button>
+                </form> 
             )}
-
             
-
-            {/* Analyze button */}
-            {parsedText && (
-            <button
-                onClick={handleAnalyse}
-                disabled={loading}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
-            >
-                {loading ? "Analyzing..." : "Analyze Résumé"}
-            </button>
-            )}
         </div>
     );
 }
