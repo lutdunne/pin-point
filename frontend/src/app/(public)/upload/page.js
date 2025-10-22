@@ -141,13 +141,13 @@ export default function Upload() {
                                     Selected file: <span className="font-semibold">{file.name}</span>
                                 </p>
                                 )}
-                                {/* <button
+                                <button
                                     onClick={handleUploadAndAnalyse}
                                     disabled={loading}
                                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold mt-4 py-2 px-4 rounded w-full"
                                 >
                                     {loading ? "Analyzing..." : "Analyze Résumé"}
-                                </button> */}
+                                </button>
                             </form>
                         </div>
                         
