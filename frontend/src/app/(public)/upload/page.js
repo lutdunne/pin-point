@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FileUpload from "../../(main)/components/FileUpload";
 import LoadingPage from "../../(main)/components/LoadingPage";
+import { Lock } from "lucide-react";
 
 
 export default function Upload() {
@@ -119,20 +120,22 @@ export default function Upload() {
 
                 <div className="flex flex-col overflow-y">
                     <div className="flex flex-col bg-white shadow-md rounded-xl p-30 w-3/4 text-gray-800 mx-auto">
-                        <div className="flex justify-end"><button className="rounded-xl bg-red-100 shadow-md p-2">How It Works</button></div>
-                        <div className="flex flex-row">
-                            <div className="flex flex-col items-center text-center mb-6">
+                        <div className="flex justify-between mb-6">
+                            <button className="rounded-xl bg-red-100 shadow-md p-2 mr-8">How It Works</button>
+                        </div>
+                        <div className="flex flex-row items-center space-x-12">
+                            <div className="flex flex-col items-start text-left mb-6">
                                 <h1 className="text-3xl font-bold leading-tight">
                                     Analyse Your Resume
                                 </h1>
                                 <h2 className="text-3xl font-bold leading-tight">
-                                    with <span className="text-blue-500">AI-Powered Insights</span>
+                                    with <span className="text-[#e67b77]">AI-Powered Insights</span>
                                 </h2>
                                 <p>Optimize your resume, get ATS-ready, and land your dream job faster.</p>
                             </div>
                             <form
                                 encType="multipart/form-data" 
-                                className="bg-white  px-8 pt-6 pb-8 mb-4 w-96"
+                                className="bg-white px-8 pt-6 pb-8 mb-4 w-96 flex flex-col items-center"
                             > 
                                 <FileUpload onFileChange={setFile} />
                                 
@@ -144,10 +147,13 @@ export default function Upload() {
                                 <button
                                     onClick={handleUploadAndAnalyse}
                                     disabled={loading}
-                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold mt-4 py-2 px-4 rounded w-full"
+                                    className="bg-[#e67b77] hover:bg-blue-600 text-white font-bold mt-4 py-2 px-4 rounded w-full"
                                 >
                                     {loading ? "Analyzing..." : "Analyze Résumé"}
                                 </button>
+                                <p className="flex text-xs items-center justify-center mt-2 text-gray-600">
+                                    <Lock className="mr-1 w-3 h-3" /> Privacy Guaranteed
+                                </p>
                             </form>
                         </div>
                         

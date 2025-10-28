@@ -1,10 +1,29 @@
-import Link from "next/link";
 import { FileUp } from 'lucide-react';
 import Switch from '@mui/material/Switch';
 import ThemeSwitch from "./ThemeSwitch";
 import { useView } from "./ViewContext";
+import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
+function AuthButton() {
+  const { data: session } = useSession();
 
+  if (session) {
+    return (
+      <>
+        <span>{session.user?.name}</span>
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span>Not signed in</span>
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
+  );
+}
 
 
 
@@ -37,6 +56,7 @@ export default function Header({setIsModalOpen}) {
                     Re-score
                     <FileUp className="w-4 h-4" />
                 </button>
+                <AuthButton />
             </nav>
         </header>
     );
